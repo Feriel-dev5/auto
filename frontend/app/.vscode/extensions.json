@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",           // Prettier pour le formatage automatique
+    "dbaeumer.vscode-eslint",           // ESLint pour corriger les erreurs de code
+    "dsznajder.es7-react-js-snippets",  // Raccourcis React utiles (rafce, useState...)
+    "xabikos.ReactSnippets",            // Snippets React supplémentaires
+    "formulahendry.auto-close-tag",     // Ferme automatiquement les balises HTML/JSX
+    "formulahendry.auto-rename-tag",    // Renomme automatiquement les balises
+    "oderwat.indent-rainbow",           // Couleurs d’indentation (pour la lisibilité)
+    "VisualStudioExptTeam.vscodeintellicode" // Suggestions intelligentes
+]
+}
