@@ -1,5 +1,5 @@
 import React from "react";
-import InspectionForms3 from "../pages/Onboarding/InspectionForms3.jsx"; 
+import InspectionForms3 from "../pages/onboarding/InspectionForms3.jsx"; 
 import VehicleTypesSection from "../components/VehicleTypesSection";
 
 const Inspection3 = () => {

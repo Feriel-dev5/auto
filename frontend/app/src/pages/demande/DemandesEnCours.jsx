@@ -71,7 +71,7 @@ const DemandesEnCours = () => {
               </button>
               {menuOpen && (
                 <div className="absolute right-0 mt-1 bg-white shadow rounded-md w-40 z-10 text-sm">
-                  <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer">Tout</div>
+                  <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer"  onClick={() => navigate("/demandes-en-attentes")}>En Attente</div>
                   <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-teal-600" onClick={() => navigate("/demandes-validees")}>Validées</div>
                   <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-red-500" onClick={() => navigate("/demandes-annulees")}>Annulées</div>
                 </div>
@@ -84,6 +84,7 @@ const DemandesEnCours = () => {
           {demandes.map((d, index) => (
             <div key={index} className="bg-white p-6 rounded-xl shadow space-y-2">
               <p className="text-orange-500 font-semibold text-sm">Demande en cours</p>
+             <p>CIN : <strong>{d.cin}</strong></p>
               <p>Marque : <strong>{d.vehicule?.marque}</strong></p>
               <p>Modèle : <strong>{d.vehicule?.modele}</strong></p>
               <p>Année : <strong>{d.vehicule?.annee}</strong></p>
@@ -98,7 +99,7 @@ const DemandesEnCours = () => {
               )}
               <div className="flex justify-between items-center pt-2">
                 <span className="text-xs text-gray-500">
-                  {new Date(d.date || Date.now()).toLocaleDateString("fr-FR")}
+                  {new Date( Date.now()).toLocaleDateString("fr-FR")||d.date}
                 </span>
                 <div className="flex items-center gap-4">
                   <FaPen className="text-gray-600 cursor-pointer" />
@@ -123,7 +124,11 @@ const DemandesEnCours = () => {
         </div>
       </aside>
     </div>
-  );
-};
+  );};
+
 
 export default DemandesEnCours;
+
+
+
+

@@ -1,10 +1,9 @@
-//import "isomorphic-fetch";
+// ✅ CORRECTION : PORT 3000 au lieu de 5000
 const apiURL = "http://localhost:3000";
-
 
 class api {
   constructor() {
-    this.token = "";
+    this.token = localStorage.getItem("token") || "";
   }
 
   getToken() {
@@ -13,6 +12,7 @@ class api {
 
   setToken(token) {
     this.token = token;
+    localStorage.setItem("token", token);
   }
 
   get(path) {
@@ -22,8 +22,16 @@ class api {
           mode: "cors",
           method: "GET",
           credentials: "include",
-          headers: { "Content-Type": "application/json", Authorization: `JWT ${this.token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            ...(this.token && { Authorization: `Bearer ${this.token}` })
+          },
         });
+
+        if (!response.ok) {
+          const error = await response.json();
+          return reject(error);
+        }
 
         const res = await response.json();
         resolve(res);
@@ -40,9 +48,17 @@ class api {
           mode: "cors",
           method: "PUT",
           credentials: "include",
-          headers: { "Content-Type": "application/json", Authorization: `JWT ${this.token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            ...(this.token && { Authorization: `Bearer ${this.token}` })
+          },
           body: typeof body === "string" ? body : JSON.stringify(body),
         });
+
+        if (!response.ok) {
+          const error = await response.json();
+          return reject(error);
+        }
 
         const res = await response.json();
         resolve(res);
@@ -51,10 +67,6 @@ class api {
       }
     });
   }
-
-  // getReferal(erdddads){
-  //   das
-  // }
 
   postFormData(path, file) {
     let formData = new FormData();
@@ -70,6 +82,12 @@ class api {
           headers: {},
           body: formData,
         });
+
+        if (!response.ok) {
+          const error = await response.json();
+          return reject(error);
+        }
+
         const res = await response.json();
         console.log("e", res);
         resolve(res);
@@ -87,8 +105,17 @@ class api {
           mode: "cors",
           credentials: "include",
           method: "DELETE",
-          headers: { "Content-Type": "application/json", Authorization: `JWT ${this.token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            ...(this.token && { Authorization: `Bearer ${this.token}` })
+          },
         });
+
+        if (!response.ok) {
+          const error = await response.json();
+          return reject(error);
+        }
+
         const res = await response.json();
         resolve(res);
       } catch (e) {
@@ -104,15 +131,20 @@ class api {
           mode: "cors",
           method: "POST",
           credentials: "include",
-          headers: { "Content-Type": "application/json", Authorization: `JWT ${this.token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            ...(this.token && { Authorization: `Bearer ${this.token}` })
+          },
           body: typeof body === "string" ? body : JSON.stringify(body),
         });
 
         const res = await response.json();
-        if (response.status !== 200) {
+        
+        if (!response.ok) {
           console.log("res", res);
           return reject(res);
         }
+        
         resolve(res);
       } catch (e) {
         console.log("e", e);
@@ -120,6 +152,7 @@ class api {
       }
     });
   }
+
   download(path, body) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -127,11 +160,14 @@ class api {
           mode: "cors",
           method: "POST",
           credentials: "include",
-          headers: { "Content-Type": "application/json", Authorization: `JWT ${this.token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            ...(this.token && { Authorization: `Bearer ${this.token}` })
+          },
           body: typeof body === "string" ? body : JSON.stringify(body),
         });
 
-        if (response.status !== 200) {
+        if (!response.ok) {
           return reject(response);
         }
         resolve(response);

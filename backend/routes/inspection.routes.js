@@ -6,6 +6,7 @@ const { createInspection } = require("../Controlers/inspection.controller.js");
 
 
 
-router.post("/inspection", createInspection);
+router.post("/api/inspection", createInspection);
 
 module.exports = router;
+

@@ -1,53 +1,61 @@
 const cors = require("cors");
 const mongoose = require("mongoose");
 const express = require("express");
-const authRoutes = require('./routes/authRoutes');
-const protectedRoute = require('./routes/protectedRoute');
-const { middleware1 } = require("./middleware/middleware");
+const authRoutes = require("./routes/authRoutes");
+const protectedRoute = require("./routes/protectedRoute");
 const router = require("./routes/usersRoutes");
 const inspectionRoutes = require("./routes/inspection.routes");
-const app = express();
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./middleware/authMiddleware");
+
+const app = express();
+
+// CORS
 const origin = [
   "http://localhost:5173",
   "https://localhost:5173",
 ];
- app.use('/auth', authRoutes);
- app.use('/protected', protectedRoute);
- const PORT = process.env.PORT || 3000;
- app.listen(PORT, () => {
- console.log(`Server is running on port ${PORT}`);
- });
 app.use(cors({ credentials: true, origin }));
+
+// JSON
 app.use(express.json());
+
+// Routes
+app.use("/auth", authRoutes);
+app.use("/protected", protectedRoute);
 app.use(router);
-
-router.get("/api/me",verifyToken, async (req, res)=>{
-  const UserModel = require("./models/User");
-  console.log(req.userId);
-  
-  const result =await UserModel.find()
-    return res.status(200).send({data : result})
-})
 app.use(inspectionRoutes);
-  const token = jwt.sign({ userId: "686cfb331ec6ac73a486684a", role:"CLIENT" }, process.env.JWT_SECRET || 'your-secret-key', {
-      expiresIn: "1h",
-    });
-    console.log(token);
 
-const Port = 3000;
-const dBConnect = "mongodb://localhost:27017/expertiseAutoDb";
-const options = {useNewUrlParser: true,useUnifiedTopology: true,};
+// Route protégée exemple
+router.get("/api/me", verifyToken, async (req, res) => {
+  const UserModel = require("./models/User");
+
+  const result = await UserModel.find();
+  return res.status(200).send({ data: result });
+});
+
+// Génération d’un token de test
+const token = jwt.sign(
+  { userId: "686cfb331ec6ac73a486684a", role: "CLIENT" },
+  process.env.JWT_SECRET || "your-secret-key",
+  { expiresIn: "1h" }
+);
+console.log("TOKEN :", token);
+
+// Connexion Mongo + start serveur
+const DB_URL = "mongodb://localhost:27017/expertiseAutoDb";
+const PORT = 3000;
+
 (async () => {
   try {
-    await mongoose.connect(dBConnect, options);
+    await mongoose.connect(DB_URL);
     console.log("Connecté à MongoDB");
 
-    app.listen(Port, "0.0.0.0", () => {
-      console.log(` Serveur disponible sur http://localhost:${Port}`);
+    app.listen(PORT, () => {
+      console.log(`🚀 Serveur disponible sur http://localhost:${PORT}`);
     });
+
   } catch (error) {
-    console.log(" Erreur de connexion à la base de données :", error);
-}
+    console.log("❌ Erreur de connexion à la base de données :", error);
+  }
 })();

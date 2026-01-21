@@ -96,26 +96,18 @@ const DemandesAnnulees = () => {
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="bg-red-200 text-red-700 px-4 py-1 rounded-md text-sm"
-              >
-                ❌ Annulées
+                className="bg-red-200 text-red-700 px-4 py-1 rounded-md text-sm" > En Attente
               </button>
               {menuOpen && (
                 <div className="absolute right-0 mt-1 bg-white shadow rounded-md w-40 z-10 text-sm">
                   <div
-                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => navigate("/demandes")}
-                  >
-                    ⏱ En cours
+                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer" onClick={() => navigate("/demandes")}> En cours
                   </div>
                   <div
-                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-teal-600"
-                    onClick={() => navigate("/demandes-validees")}
-                  >
-                    ✅ Validées
+                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-teal-600" onClick={() => navigate("/demandes-validees")}> Validées
                   </div>
                   <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-red-500" >
-                    ❌ Annulées
+                     Annulées
                   </div>
                 </div>
               )}

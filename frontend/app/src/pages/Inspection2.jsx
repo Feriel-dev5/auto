@@ -1,6 +1,6 @@
 import React from "react";
 import voitureForm from "../assets/form-illustration.png"; 
-import InspectionForms2 from "../pages/Onboarding/InspectionForms2.jsx"; 
+import InspectionForms2 from "../pages/onboarding/InspectionForms2.jsx"; 
 import VehicleTypesSection from "../components/VehicleTypesSection";
 
 const Inspection2 = () => {

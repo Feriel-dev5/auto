@@ -5,74 +5,53 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Inspection3 = () => {
   const navigate = useNavigate();
-  const [besoinsSpecifiques, setBesoinsSpecifiques] = useState("");
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [cin, setCin] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const handleSubmit = async () => {
-    const step1 = JSON.parse(localStorage.getItem("inspection_step1"));
-    const step2 = JSON.parse(localStorage.getItem("inspection_step2"));
+  const validateForm = () => {
+    const newErrors = {};
 
-    if (!step1 || !step2) {
-      alert("Données manquantes. Veuillez remplir les étapes précédentes.");
+    if (!nom.trim()) {
+      newErrors.nom = "Le nom est obligatoire";
+    } else if (nom.length < 2) {
+      newErrors.nom = "Le nom doit contenir au moins 2 caractères";
+    }
+
+    if (!prenom.trim()) {
+      newErrors.prenom = "Le prénom est obligatoire";
+    } else if (prenom.length < 2) {
+      newErrors.prenom = "Le prénom doit contenir au moins 2 caractères";
+    }
+
+    if (!cin.trim()) {
+      newErrors.cin = "Le CIN est obligatoire";
+    } else if (cin.length !== 8) {
+      newErrors.cin = "Le CIN doit contenir exactement 8 caractères";
+    }
+
+    if (!telephone.trim()) {
+      newErrors.telephone = "Le téléphone est obligatoire";
+    } else if (!/^\d{8}$/.test(telephone)) {
+      newErrors.telephone = "Le téléphone doit contenir exactement 8 chiffres";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (!validateForm()) {
       return;
     }
 
-    const fullData = {
-      vehicule: {
-        marque: step1.marque,
-        modele: step1.modele,
-        annee: step1.annee,
-        immatriculation: step1.immatriculation || "",
-      },
-      localisation: {
-        codePostal: step2.codePostal,
-        ville: step2.ville,
-        pays: step2.pays,
-      },
-      besoinsSpecifiques,
-      clientId: "64f3a7c9c89b8f5672a12345",
-    };
-
-    console.log("📤 Données envoyées :", fullData);
-
-    try {
-      const response = await fetch("http://localhost:3000/inspection", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fullData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("✅ Demande envoyée avec succès !");
-        
-
-        // 🧠 Enregistrement dans localStorage côté frontend
-        const demandesExistantes = JSON.parse(localStorage.getItem("demandesEnCours")) || [];
-        const nouvelleDemande = {
-          id: Date.now(),
-          marque: step1.marque,
-          modele: step1.modele,
-          annee: step1.annee,
-          localisation: `${step2.codePostal} ${step2.ville}, ${step2.pays}`,
-          lien: besoinsSpecifiques.startsWith("http") ? besoinsSpecifiques : null,
-          date: new Date().toLocaleDateString("fr-FR"),
-        };
-
-        localStorage.setItem(
-          "demandesEnCours",
-          JSON.stringify([...demandesExistantes, nouvelleDemande])
-        );
-
-        localStorage.removeItem("inspection_step1");
-        localStorage.removeItem("inspection_step2");
-        navigate("/demandes");
-      } else {
-        alert("❌ Erreur : " + data.message);
-      }
-    } catch (error) {
-      alert("❌ Erreur serveur : " + error.message);
-    }
+    localStorage.setItem(
+      "inspection_step3",
+      JSON.stringify({ nom, prenom, cin, telephone })
+    );
+    navigate("/Inspection4");
   };
 
   return (
@@ -99,8 +78,8 @@ const Inspection3 = () => {
       </nav>
 
       <h2 className="text-3xl font-bold mb-20 text-center flex items-center gap-3">
-        <i className="fas fa-clipboard-check text-yellow-400 text-2xl" />
-        Demander mon inspection
+        <i className="fas fa-user text-yellow-400 text-2xl" />
+        Informations personnelles
       </h2>
 
       <div className="flex items-center space-x-20 mb-10">
@@ -119,54 +98,115 @@ const Inspection3 = () => {
         <div className="flex flex-col items-center text-sm">
           <div className="w-4 h-4 rounded-full bg-yellow-400 mb-1" />
           <span className="text-yellow-400 font-bold">03</span>
-          <span className="text-yellow-400">Des besoins spécifiques ?</span>
+          <span className="text-yellow-400">Informations personnelles</span>
+        </div>
+        <div className="h-0.5 bg-gray-500 w-20"></div>
+        <div className="flex flex-col items-center text-sm opacity-50">
+          <div className="w-4 h-4 rounded-full bg-gray-400 mb-1" />
+          <span>04</span>
+          <span>Des besoins spécifiques ?</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start w-full max-w-6xl">
-        <div className="bg-[#202A60] p-8 rounded-xl w-full">
-          <p className="text-center text-sm font-semibold mb-2">
-            Vous pouvez nous insérer ici le lien de l'annonce si le véhicule est en ligne sur un site d’annonce.
-          </p>
-          <p className="text-center text-xs text-teal-400 mb-4">[facultatif]</p>
+      <div className="w-full max-w-2xl bg-[#202A60] p-10 rounded-2xl shadow-xl">
+        <h2 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+          <i className="fas fa-user text-yellow-400 text-2xl" />
+          Informations personnelles
+        </h2>
 
-          <textarea
-            className="w-full h-48 p-4 rounded-lg bg-[#1A235A] border border-gray-500 text-white"
-            placeholder="Texte libre"
-            value={besoinsSpecifiques}
-            onChange={(e) => setBesoinsSpecifiques(e.target.value)}
-          />
+        <div className="flex flex-col space-y-5">
+          <div>
+            <input
+              type="text"
+              placeholder="Nom"
+              value={nom}
+              onChange={(e) => {
+                setNom(e.target.value);
+                if (errors.nom) setErrors({ ...errors, nom: null });
+              }}
+              className={`w-full p-4 rounded-lg bg-[#1A235A] border ${
+                errors.nom ? "border-red-500" : "border-gray-500"
+              } text-white placeholder-gray-400`}
+            />
+            {errors.nom && (
+              <p className="text-red-400 text-xs mt-1">{errors.nom}</p>
+            )}
+          </div>
 
-          <div className="flex justify-between pt-6">
-            <button onClick={() => navigate(-1)} className="text-sm text-yellow-400">
-              Retour
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="bg-[#FDC654] text-white px-6 py-2 rounded-lg"
-            >
-              Demander
-            </button>
+          <div>
+            <input
+              type="text"
+              placeholder="Prénom"
+              value={prenom}
+              onChange={(e) => {
+                setPrenom(e.target.value);
+                if (errors.prenom) setErrors({ ...errors, prenom: null });
+              }}
+              className={`w-full p-4 rounded-lg bg-[#1A235A] border ${
+                errors.prenom ? "border-red-500" : "border-gray-500"
+              } text-white placeholder-gray-400`}
+            />
+            {errors.prenom && (
+              <p className="text-red-400 text-xs mt-1">{errors.prenom}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="CIN"
+              maxLength="8"
+              value={cin}
+              onChange={(e) => {
+                setCin(e.target.value);
+                if (errors.cin) setErrors({ ...errors, cin: null });
+              }}
+              className={`w-full p-4 rounded-lg bg-[#1A235A] border ${
+                errors.cin ? "border-red-500" : "border-gray-500"
+              } text-white placeholder-gray-400`}
+            />
+            {errors.cin && (
+              <p className="text-red-400 text-xs mt-1">{errors.cin}</p>
+            )}
+            <p className="text-gray-400 text-xs mt-1">
+              {cin.length}/8 caractères
+            </p>
+          </div>
+
+          <div>
+            <input
+              type="tel"
+              placeholder="Téléphone"
+              maxLength="8"
+              value={telephone}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                setTelephone(value);
+                if (errors.telephone) setErrors({ ...errors, telephone: null });
+              }}
+              className={`w-full p-4 rounded-lg bg-[#1A235A] border ${
+                errors.telephone ? "border-red-500" : "border-gray-500"
+              } text-white placeholder-gray-400`}
+            />
+            {errors.telephone && (
+              <p className="text-red-400 text-xs mt-1">{errors.telephone}</p>
+            )}
+            <p className="text-gray-400 text-xs mt-1">
+              {telephone.length}/8 chiffres
+            </p>
           </div>
         </div>
 
-        <div>
-          <h3 className="text-2xl font-bold mb-4">Des besoins spécifiques ?</h3>
-          <p className="text-sm text-gray-300 mb-2">
-            Facultatif (c’est un champ non obligatoire)
-          </p>
-          <p className="text-sm text-gray-400">
-            Une question ? {" "}
-            <a href="#" className="underline text-yellow-400">
-              Appelez-nous sur notre standard
-            </a>{" "}
-            ouvert 7j/7 de 9h à 20h.
-          </p>
-          <img
-            src={voitureForm}
-            alt="illustration formulaire"
-            className="mt-8 max-w-md w-full"
-          />
+        <div className="flex justify-between pt-8">
+          <button onClick={() => navigate(-1)} className="text-sm text-yellow-400">
+            Retour
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="bg-[#FDC654] text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-500 transition"
+          >
+            Confirmer
+          </button>
         </div>
       </div>
     </div>

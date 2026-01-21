@@ -106,24 +106,12 @@ const DemandesValidees = () => {
                 <div className="absolute right-0 mt-1 bg-white shadow rounded-md w-40 z-10 text-sm">
                   <div
                     className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      navigate("/demandes");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    ⏱ En cours
+                    onClick={() => { navigate("/demandes");setMenuOpen(false);}} > En cours
                   </div>
-                  <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-teal-600">
-                    ✅ Validée
+                  <div className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-teal-600"> En Attente
                   </div>
                   <div
-                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-red-500"
-                    onClick={() => {
-                      navigate("/demandes-annulees");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    ❌ Annulée
+                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer text-red-500" onClick={() => { navigate("/demandes-annulees"); setMenuOpen(false);}}>  Annulée
                   </div>
                 </div>
               )}
@@ -176,4 +164,4 @@ const DemandesValidees = () => {
   );
 };
 
-export default DemandesValidees;
+export default DemandesValidees; 

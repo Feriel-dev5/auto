@@ -21,10 +21,21 @@ export default function Connexion() {
         motDePasse,
       });
 
-      alert("Connexion réussie !");
-      console.log(res.client);
+      console.log("Réponse connexion:", res);
+      
+      // ✅ Sauvegarder le token
       API.setToken(res.token);
-      navigate("/"); 
+      
+      // ✅ Vérifier que le token est bien sauvegardé
+      console.log("Token sauvegardé:", localStorage.getItem("token"));
+      
+      alert("Connexion réussie !");
+      
+      // ✅ Petit délai pour s'assurer que le token est bien écrit
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
+      
     } catch (error) {
       alert(error.message || "Erreur de connexion");
       console.error(error);
@@ -50,7 +61,7 @@ export default function Connexion() {
           </h2>
           <p className="mt-6 text-lg font-medium">Connectez-vous</p>
           <p className="mt-2 text-sm">
-            Vous n’avez pas de compte ?{" "}
+            Vous n'avez pas de compte ?{" "}
             <Link to="/inscription" className="text-yellow-400 font-semibold">
               Inscription
             </Link>
@@ -102,7 +113,7 @@ export default function Connexion() {
 
             <button
               type="submit"
-              className="w-full bg-[#0F1A4D] text-white py-2 rounded-lg mt-2"
+              className="w-full bg-[#0F1A4D] text-white py-2 rounded-lg mt-2 hover:bg-[#1a2870] transition"
             >
               Se connecter
             </button>
@@ -115,11 +126,11 @@ export default function Connexion() {
           </div>
 
           <div className="space-y-3">
-            <button className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-3">
+            <button className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition">
               <FcGoogle size={20} />
               <span className="text-sm font-medium">Continuer avec Google</span>
             </button>
-            <button className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-3">
+            <button className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition">
               <FaFacebookF size={18} />
               <span className="text-sm font-medium">Continuer avec Facebook</span>
             </button>
@@ -128,10 +139,12 @@ export default function Connexion() {
       </div>
 
       <div className="absolute bottom-4 right-4">
-        <button className="border border-[#0F1A4D] text-[#0F1A4D] px-4 py-1 rounded-md">
-          Annuler
-        </button>
+        <Link to="/">
+          <button className="border border-[#0F1A4D] text-[#0F1A4D] px-4 py-1 rounded-md hover:bg-[#0F1A4D] hover:text-white transition">
+            Annuler
+          </button>
+        </Link>
       </div>
-    </div>
-  );
+    </div>
+  );
 }

@@ -11,10 +11,26 @@ export default function Inscription() {
   const [telephone, setTelephone] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [confirmMotDePasse, setConfirmMotDePasse] = useState("");
-  const [role,setRole]=useState("");
+  const [role, setRole] = useState("");
+  const [errors, setErrors] = useState({});
+
+  // ✅ Fonction pour gérer le téléphone (max 8 chiffres)
+  const handleTelephoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ""); // Garde uniquement les chiffres
+    if (value.length <= 8) {
+      setTelephone(value);
+      setErrors({ ...errors, telephone: "" }); // Efface l'erreur
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validation du téléphone
+    if (telephone && telephone.length !== 8) {
+      setErrors({ ...errors, telephone: "Le numéro de téléphone doit contenir exactement 8 chiffres" });
+      return;
+    }
 
     if (motDePasse !== confirmMotDePasse) {
       alert("Les mots de passe ne correspondent pas.");
@@ -28,17 +44,14 @@ export default function Inscription() {
         motDePasse,
         telephone,
         adresse: "",
-        role
-        
+        role,
       });
-    
-
 
       alert("Inscription réussie !");
       console.log(res);
     } catch (error) {
       console.error("Erreur :", error);
-      alert(error.message || "Erreur lors de l'inscription");
+      alert(error.response?.data?.message || "Erreur lors de l'inscription");
     }
   };
 
@@ -91,8 +104,9 @@ export default function Inscription() {
                 onChange={(e) => setNom(e.target.value)}
                 required
               />
-              <FaUser className="absolute left-2 top-2.5 text-gray-400" />
+              <FaUser className="absolute right-2 top-2.5 text-gray-400" />
             </div>
+
             <div className="relative">
               <input
                 type="email"
@@ -102,18 +116,29 @@ export default function Inscription() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <FaEnvelope className="absolute left-2 top-2.5 text-gray-400" />
+              <FaEnvelope className="absolute right-2 top-2.5 text-gray-400" />
             </div>
+
             <div className="relative">
               <input
                 type="tel"
-                placeholder="+33   Numéro de téléphone"
-                className="w-full border-b border-gray-300 pl-8 py-2 focus:outline-none"
+                placeholder="Numéro de téléphone"
+                className={`w-full border-b pl-8 py-2 focus:outline-none ${
+                  errors.telephone ? "border-red-500" : "border-gray-300"
+                }`}
                 value={telephone}
-                onChange={(e) => setTelephone(e.target.value)}
+                onChange={handleTelephoneChange}
+                maxLength="8"
               />
-              <FaPhoneAlt className="absolute left-2 top-2.5 text-gray-400" />
+              <FaPhoneAlt className="absolute right-2 top-2.5 text-gray-400" />
+              {errors.telephone && (
+                <p className="text-red-500 text-xs mt-1">{errors.telephone}</p>
+              )}
+              <p className="text-xs text-gray-400 mt-1">
+              
+              </p>
             </div>
+
             <div className="relative">
               <input
                 type="password"
@@ -123,19 +148,9 @@ export default function Inscription() {
                 onChange={(e) => setMotDePasse(e.target.value)}
                 required
               />
-{/* le role */}
-                 <input
-                type="text"
-                placeholder="entrer votre role"
-                className="w-full border-b border-gray-300 pl-8 py-2 focus:outline-none text-red-500"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              />
-{/* le role */}
-
               <IoMdEyeOff className="absolute right-2 top-2.5 text-gray-400" />
             </div>
+
             <div className="relative">
               <input
                 type="password"
@@ -145,10 +160,6 @@ export default function Inscription() {
                 onChange={(e) => setConfirmMotDePasse(e.target.value)}
                 required
               />
-              
-
-              
-
               <IoMdEyeOff className="absolute right-2 top-2.5 text-gray-400" />
             </div>
 
@@ -156,32 +167,35 @@ export default function Inscription() {
               <label className="flex items-start gap-2">
                 <input type="checkbox" required />
                 <span className="mt-1">
-                  J’accepte les{" "}
+                  J'accepte les{" "}
                   <a href="#" className="text-cyan-500">
-                    conditions d’utilisation
+                    conditions d'utilisation
                   </a>{" "}
                   et la{" "}
                   <a href="#" className="text-cyan-500">
                     politique de confidentialité
-                  </a>.
+                  </a>
+                  .
                 </span>
               </label>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#0F1A4D] text-white py-2 rounded-lg mt-2"
+              className="w-full bg-[#0F1A4D] text-white py-2 rounded-lg mt-2 hover:bg-[#1a2870] transition"
             >
-              S’inscrire
+              S'inscrire
             </button>
           </form>
         </div>
       </div>
 
       <div className="absolute bottom-4 right-4">
-        <button className="border border-[#0F1A4D] text-[#0F1A4D] px-4 py-1 rounded-md">
-          Annuler
-        </button>
+        <Link to="/">
+          <button className="border border-[#0F1A4D] text-[#0F1A4D] px-4 py-1 rounded-md hover:bg-[#0F1A4D] hover:text-white transition">
+            Annuler
+          </button>
+        </Link>
       </div>
     </div>
   );

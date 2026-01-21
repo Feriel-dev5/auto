@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import voiture from "../assets/hero-car.jpg";
 
 export default function Hero() {
+  // Vérifier si une session utilisateur existe
+  // Remplacez cette logique par votre système d'authentification réel
+  const userSession = localStorage.getItem('userSession'); // ou useContext, Redux, etc.
+  const isLoggedIn = userSession !== null;
+
   return (
     <section className="bg-[#161F52] flex items-center justify-center px-8 w-full py-16">
       <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12">
@@ -31,18 +36,36 @@ export default function Hero() {
               <p className="font-bold">2018</p>
             </div>
 
-            {/* Bouton à droite */}
+            {/* Bouton conditionnel */}
             <div className="ml-auto">
-              <Link to="/inspection">
+              {isLoggedIn ? (
+                <Link to="/inspection">
+                  <button
+                    type="button"
+                    className="bg-[#5D5FEF] text-white px-5 py-2 rounded-lg border border-white hover:border-transparent text-xs hover:bg-[#4a4cd4] transition-colors"
+                  >
+                    Demander mon inspection
+                  </button>
+                </Link>
+              ) : (
                 <button
                   type="button"
-                  className="bg-[#5D5FEF] text-white px-5 py-2 rounded-lg border border-white hover:border-transparent text-xs"
+                  disabled
+                  className="bg-gray-300 text-gray-500 px-5 py-2 rounded-lg border border-gray-400 text-xs cursor-not-allowed opacity-60"
+                  title="Vous devez être connecté pour demander une inspection"
                 >
                   Demander mon inspection
                 </button>
-              </Link>
+              )}
             </div>
           </div>
+          
+          {/* Message d'information si non connecté */}
+          {!isLoggedIn && (
+            <p className="text-sm text-gray-300">
+              💡 Connectez-vous pour demander une inspection
+            </p>
+          )}
         </div>
 
         {/* RIGHT: Image voiture */}
@@ -59,5 +82,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-);
+  );
 }
