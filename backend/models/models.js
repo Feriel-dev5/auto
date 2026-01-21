@@ -5,12 +5,12 @@ const Users = new mongoose.Schema(
     nom: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     motDePasse: { type: String, required: true },
-    telephone: { type: Number },
+    telephone: { type: String }, // ici
     adresse: { type: String },
     dateInscription: { type: Date, default: Date.now },
     role: { type: String, default: "clients" },
   },
-  { collection: "clients" }
+  { collection: "clients" },
 );
 
 const inspecteurSchema = new mongoose.Schema(
@@ -21,7 +21,7 @@ const inspecteurSchema = new mongoose.Schema(
     specialite: { type: String },
     disponibilite: { type: Boolean, default: true },
   },
-  { collection: "inspecteurs" }
+  { collection: "inspecteurs" },
 );
 
 const inspectionSchema = new mongoose.Schema(
@@ -61,7 +61,7 @@ const inspectionSchema = new mongoose.Schema(
     cin: { type: String, required: true }, // ✅ Changé en String pour correspondre au frontend
     telephone: { type: String, required: true }, // ✅ Changé en String pour correspondre au frontend
   },
-  { collection: "inspections" }
+  { collection: "inspections" },
 );
 
 module.exports = {

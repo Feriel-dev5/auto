@@ -28,7 +28,10 @@ export default function Inscription() {
 
     // Validation du téléphone
     if (telephone && telephone.length !== 8) {
-      setErrors({ ...errors, telephone: "Le numéro de téléphone doit contenir exactement 8 chiffres" });
+      setErrors({
+        ...errors,
+        telephone: "Le numéro de téléphone doit contenir exactement 8 chiffres",
+      });
       return;
     }
 
@@ -38,7 +41,7 @@ export default function Inscription() {
     }
 
     try {
-      const res = await API.post("/api/inscription", {
+      const res = await API.post("/auth/register", {
         nom,
         email,
         motDePasse,
@@ -57,7 +60,10 @@ export default function Inscription() {
 
   return (
     <div className="min-h-screen w-full flex relative">
-      <Link to="/" className="absolute top-6 left-6 z-50 text-3xl font-bold tracking-wide">
+      <Link
+        to="/"
+        className="absolute top-6 left-6 z-50 text-3xl font-bold tracking-wide"
+      >
         <span className="text-white">L</span>
         <span className="text-[#F7941D]">o</span>
         <span className="text-white">go</span>
@@ -82,7 +88,11 @@ export default function Inscription() {
       </div>
 
       <div className="w-1/2 bg-white flex items-center justify-center">
-        <img src={signupIllustration} alt="Illustration" className="w-60 h-auto" />
+        <img
+          src={signupIllustration}
+          alt="Illustration"
+          className="w-60 h-auto"
+        />
       </div>
 
       <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -134,9 +144,7 @@ export default function Inscription() {
               {errors.telephone && (
                 <p className="text-red-500 text-xs mt-1">{errors.telephone}</p>
               )}
-              <p className="text-xs text-gray-400 mt-1">
-              
-              </p>
+              <p className="text-xs text-gray-400 mt-1"></p>
             </div>
 
             <div className="relative">

@@ -1,6 +1,7 @@
 const cors = require("cors");
 const mongoose = require("mongoose");
 const express = require("express");
+require("dotenv").config(); // ici
 const authRoutes = require("./routes/authRoutes");
 const protectedRoute = require("./routes/protectedRoute");
 const router = require("./routes/usersRoutes");
@@ -11,10 +12,7 @@ const verifyToken = require("./middleware/authMiddleware");
 const app = express();
 
 // CORS
-const origin = [
-  "http://localhost:5173",
-  "https://localhost:5173",
-];
+const origin = ["http://localhost:5173", "https://localhost:5173"];
 app.use(cors({ credentials: true, origin }));
 
 // JSON
@@ -34,13 +32,7 @@ router.get("/api/me", verifyToken, async (req, res) => {
   return res.status(200).send({ data: result });
 });
 
-// Génération d’un token de test
-const token = jwt.sign(
-  { userId: "686cfb331ec6ac73a486684a", role: "CLIENT" },
-  process.env.JWT_SECRET || "your-secret-key",
-  { expiresIn: "1h" }
-);
-console.log("TOKEN :", token);
+// ici - token de test retiré
 
 // Connexion Mongo + start serveur
 const DB_URL = "mongodb://localhost:27017/expertiseAutoDb";
@@ -54,7 +46,6 @@ const PORT = 3000;
     app.listen(PORT, () => {
       console.log(`🚀 Serveur disponible sur http://localhost:${PORT}`);
     });
-
   } catch (error) {
     console.log("❌ Erreur de connexion à la base de données :", error);
   }

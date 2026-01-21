@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import voiture from "../assets/hero-car.jpg";
 
 export default function Hero() {
-  // Vérifier si une session utilisateur existe
-  // Remplacez cette logique par votre système d'authentification réel
-  const userSession = localStorage.getItem('userSession'); // ou useContext, Redux, etc.
-  const isLoggedIn = userSession !== null;
+  // ici
+  const { isLoggedIn } = useAuth();
 
   return (
     <section className="bg-[#161F52] flex items-center justify-center px-8 w-full py-16">
@@ -59,7 +58,7 @@ export default function Hero() {
               )}
             </div>
           </div>
-          
+
           {/* Message d'information si non connecté */}
           {!isLoggedIn && (
             <p className="text-sm text-gray-300">

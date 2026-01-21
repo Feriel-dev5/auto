@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import { FaEnvelope } from "react-icons/fa";
 import { IoMdEye } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
@@ -11,31 +12,24 @@ export default function Connexion() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await API.post("/api/connexion", {
+      const res = await API.post("/auth/login", {
         email,
         motDePasse,
       });
 
       console.log("Réponse connexion:", res);
-      
-      // ✅ Sauvegarder le token
-      API.setToken(res.token);
-      
-      // ✅ Vérifier que le token est bien sauvegardé
-      console.log("Token sauvegardé:", localStorage.getItem("token"));
-      
+
+      // ici
+      login(res.token, res.user);
+
       alert("Connexion réussie !");
-      
-      // ✅ Petit délai pour s'assurer que le token est bien écrit
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 100);
-      
+      navigate("/");
     } catch (error) {
       alert(error.message || "Erreur de connexion");
       console.error(error);
@@ -44,8 +38,10 @@ export default function Connexion() {
 
   return (
     <div className="min-h-screen w-full flex relative">
-
-      <Link to="/" className="absolute top-6 left-6 z-50 text-3xl font-bold tracking-wide">
+      <Link
+        to="/"
+        className="absolute top-6 left-6 z-50 text-3xl font-bold tracking-wide"
+      >
         <span className="text-white">L</span>
         <span className="text-[#F7941D]">o</span>
         <span className="text-white">go</span>
@@ -70,7 +66,11 @@ export default function Connexion() {
       </div>
 
       <div className="w-1/2 bg-white flex items-center justify-center">
-        <img src={signupIllustration} alt="Illustration" className="w-60 h-auto" />
+        <img
+          src={signupIllustration}
+          alt="Illustration"
+          className="w-60 h-auto"
+        />
       </div>
 
       <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -132,7 +132,9 @@ export default function Connexion() {
             </button>
             <button className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition">
               <FaFacebookF size={18} />
-              <span className="text-sm font-medium">Continuer avec Facebook</span>
+              <span className="text-sm font-medium">
+                Continuer avec Facebook
+              </span>
             </button>
           </div>
         </div>
